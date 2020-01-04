@@ -1,0 +1,64 @@
+{% extends 'todoApp/base.html' %}
+
+{% block content %}
+{% load widget_tweaks %}
+
+<div class="container-fluid">
+        <div class="content">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% for field in form.visible_fields %}
+                <div class="row justify-content-center">
+                    <div class="col-1 pt-2 text-right">
+                        {{ field.label_tag }}
+                    </div>
+                    <div class="col-4">
+                        {% render_field field class="form-control" %}
+                    </div>
+
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary col-1 offset-6">Add</button>
+
+            </form> <!--form-->
+            <br>
+        </div> <!--content-->
+
+</div><!-- container-fluid -->
+
+<div class="container">
+    <table class="table table-hover" id="table_id">
+        <thead class="thead-dark">
+        <tr class="text-center">
+            <th scope="col">Task</th>
+            <th scope="col">Due Date</th>
+            <th scope="col">Category</th>
+            <th scope="col"><span class="glyphicon glyphicon-camera">Action</span></th>
+        </tr>
+        </thead> <!--thead-->
+
+        <tbody>
+        {% for todo in todos %}
+        <tr class="clickable text-center"
+            onclick="window.location='{% url 'complete' todo.pk %}'">
+            <td>
+                <strong>{{ todo.task }}</strong>
+            </td>
+            <td><span>{{ todo.due_date }}</span></td>
+            <td><strong class="category-{{ todo.category }} text-light">{{ todo.category }}</strong></td>
+            <td>
+                <a href="{% url 'edit' todo.pk %}">
+                    <button type="button" class="button btn btn-secondary">
+                        <span class="glyphicon glyphicon-camera">Edit</span>
+                    </button>
+                </a>
+            </td> <!--td-->
+        </tr> <!--tr-->
+        {% endfor %}
+        </tbody> <!--tbody-->
+
+    </table> <!--table-->
+</div> <!--container-->
+
+{% endblock %}
